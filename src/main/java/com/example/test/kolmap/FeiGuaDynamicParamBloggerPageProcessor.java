@@ -17,6 +17,8 @@ import us.codecraft.webmagic.utils.HttpConstant;
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static jodd.jerry.Jerry.jerry;
 
@@ -393,18 +395,39 @@ public class FeiGuaDynamicParamBloggerPageProcessor implements PageProcessor {
             flag=true;
             throw new RuntimeException("cookies 超时了,重新登陆 pageNo=" + pageNo);
         }
+
         Jerry doc = jerry(page.getHtml().toString());
-        if (page.getUrl().toString().startsWith(hostAddr + "Blogger/Search") && !page.getHtml().toString().contains("没有更多")) {
-            String url = page.getUrl().toString();
-            pageNo = Integer.valueOf(url.substring(url.lastIndexOf("=") + 1)) + 1;
-            if (pageNo>151) {
+        if (page.getUrl().toString().startsWith(hostAddr + "Blogger/Search")) {
+
+            String text = doc.s(".search-result-bar h3").text();
+            if (StrUtil.isBlank(text)){
                 return;
             }
+            Pattern pattern=Pattern.compile("[^0-9]");
+            Matcher matcher = pattern.matcher(text);
+            String trim = matcher.replaceAll("").trim();
+            if (StrUtil.isBlank(trim)){
+                return;
+            }else {
+                Integer integer = Integer.valueOf(trim);
+                if (pageNo>integer+1){
+                    return;
+                }
+            }
+            String url = page.getUrl().toString();
+            pageNo = Integer.valueOf(url.substring(url.lastIndexOf("=") + 1)) + 1;
             log.error("pageNo=" + pageNo + ";  url=" + page.getUrl());
+            System.out.println("++++++++++"+hostAddr + "Blogger/Search?" + params + "&page=" + pageNo);
             page.addTargetRequest(hostAddr + "Blogger/Search?" + params + "&page=" + pageNo);
         }
+
+
+
         if (page.getUrl().toString().startsWith(hostAddr + "Blogger/Search")) {
             List<String> links = page.getHtml().links().regex(hostAddr + "Blogger/Search\\?" + params + "&page=\\d+#/Blogger/Detail.*").all();
+            if (CollectionUtil.isEmpty(links)) {
+                return;
+            }
             for (String link : links) {
                 String targetLink = link.replaceAll("/Blogger/Search\\?" + params + "&page=\\d*#", "");
                 page.addTargetRequest(targetLink);
