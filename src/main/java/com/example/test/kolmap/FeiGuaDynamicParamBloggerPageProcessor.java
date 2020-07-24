@@ -398,31 +398,17 @@ public class FeiGuaDynamicParamBloggerPageProcessor implements PageProcessor {
 
         Jerry doc = jerry(page.getHtml().toString());
         if (page.getUrl().toString().startsWith(hostAddr + "Blogger/Search")) {
-
-            String text = doc.s(".search-result-bar h3").text();
-            if (StrUtil.isBlank(text)){
-                return;
-            }
-            Pattern pattern=Pattern.compile("[^0-9]");
-            Matcher matcher = pattern.matcher(text);
-            String trim = matcher.replaceAll("").trim();
-            if (StrUtil.isBlank(trim)){
-                return;
-            }else {
-                Integer integer = Integer.valueOf(trim);
-                if (pageNo>integer+1){
-                    return;
-                }
-            }
             String url = page.getUrl().toString();
             pageNo = Integer.valueOf(url.substring(url.lastIndexOf("=") + 1)) + 1;
             log.error("pageNo=" + pageNo + ";  url=" + page.getUrl());
+            System.out.println("----------pageNo="+pageNo);
             System.out.println("++++++++++"+hostAddr + "Blogger/Search?" + params + "&page=" + pageNo);
-            page.addTargetRequest(hostAddr + "Blogger/Search?" + params + "&page=" + pageNo);
+            List<String> links = page.getHtml().links().regex(hostAddr + "Blogger/Search\\?" + params + "&page=\\d+#/Blogger/Detail.*").all();
+            if (CollectionUtil.isNotEmpty(links)){
+                page.addTargetRequest(hostAddr + "Blogger/Search?" + params + "&page=" + pageNo);
+            }
+
         }
-
-
-
         if (page.getUrl().toString().startsWith(hostAddr + "Blogger/Search")) {
             List<String> links = page.getHtml().links().regex(hostAddr + "Blogger/Search\\?" + params + "&page=\\d+#/Blogger/Detail.*").all();
             if (CollectionUtil.isEmpty(links)) {
