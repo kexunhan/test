@@ -17,8 +17,6 @@ import us.codecraft.webmagic.utils.HttpConstant;
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static jodd.jerry.Jerry.jerry;
 
@@ -395,8 +393,8 @@ public class FeiGuaDynamicParamBloggerPageProcessor implements PageProcessor {
             flag=true;
             throw new RuntimeException("cookies 超时了,重新登陆 pageNo=" + pageNo);
         }
-
         Jerry doc = jerry(page.getHtml().toString());
+
         if (page.getUrl().toString().startsWith(hostAddr + "Blogger/Search")) {
             String url = page.getUrl().toString();
             pageNo = Integer.valueOf(url.substring(url.lastIndexOf("=") + 1)) + 1;
@@ -409,6 +407,7 @@ public class FeiGuaDynamicParamBloggerPageProcessor implements PageProcessor {
             }
 
         }
+
         if (page.getUrl().toString().startsWith(hostAddr + "Blogger/Search")) {
             List<String> links = page.getHtml().links().regex(hostAddr + "Blogger/Search\\?" + params + "&page=\\d+#/Blogger/Detail.*").all();
             if (CollectionUtil.isEmpty(links)) {
@@ -483,7 +482,6 @@ public class FeiGuaDynamicParamBloggerPageProcessor implements PageProcessor {
             }
 
         }
-
         //橱窗商品
         if (page.getUrl().toString().startsWith(hostAddr + "Blogger/GetEcommerceAnalysis") && !page.getHtml().toString().contains("没有更多内容")) {
             if (StrUtil.isBlank(page.getHtml().css("div.media-list").toString())) {

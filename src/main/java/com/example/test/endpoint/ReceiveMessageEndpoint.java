@@ -56,8 +56,6 @@ public class ReceiveMessageEndpoint {
                 }
                 feiGuaDynamicParamBloggerPageProcessor.setParams(paramsList.get(i));
                 Spider.create(feiGuaDynamicParamBloggerPageProcessor).addUrl(feiGuaDynamicParamBloggerPageProcessor.getHostAddr() + "Blogger/Search?" + paramsList.get(i) + "&page=" + page).thread(1).run();
-                Thread.sleep(300000);
-                System.out.println("-----------------------i=" + i);
             }
         }
     }
