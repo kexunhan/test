@@ -4,6 +4,7 @@ package com.example.test.endpoint;
 import com.example.test.dto.Content;
 import com.example.test.dto.ReceiveMessageDto;
 import com.example.test.kolmap.FeiGuaDynamicParamBloggerPageProcessor;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
+@Slf4j
 public class ReceiveMessageEndpoint {
 
 
@@ -31,7 +33,7 @@ public class ReceiveMessageEndpoint {
     public void receiveRobotMassage(@RequestBody ReceiveMessageDto receiveMessageDto) throws Exception {
         Content text = receiveMessageDto.getText();
         if (Objects.nonNull(text)) {
-            System.out.println("收到钉钉机器人的信息...");
+            log.debug("收到钉钉机器人的信息...");
             String cookie = text.getContent().trim();
             Site site = Site.me().setRetryTimes(3).setSleepTime(8000).setTimeOut(10000).addCookie("PHPSESSID", cookie);
             feiGuaDynamicParamBloggerPageProcessor.setSite(site);
@@ -40,17 +42,16 @@ public class ReceiveMessageEndpoint {
 
             int page = (int) page1.get("pageNo");
             String param = (String) page1.get("param");
-
-            System.out.println("page=" + page+"\t"+"param=" + param);
-            System.out.println("接收的cookie: "+feiGuaDynamicParamBloggerPageProcessor.getSite().getCookies());
+            log.debug("page={} \t param={}",page,param);
+            log.debug("接收的cookie: {}",feiGuaDynamicParamBloggerPageProcessor.getSite().getCookies());
             mongoTemplate.dropCollection("PAGE");
             List<String> paramsList = feiGuaDynamicParamBloggerPageProcessor.getParamsList();
             int index = paramsList.indexOf(param);
-            System.out.println("paramsList.size="+ paramsList.size()+"\t 当前为index="+index);
+            log.debug("paramsList.size={},\t 当前为index={}",paramsList.size(),index);
             feiGuaDynamicParamBloggerPageProcessor.setFlag(false);
             for (int i = index; i < paramsList.size(); i++) {
-                System.out.println("i=" + i);
-                System.out.println("开始请求url:"+feiGuaDynamicParamBloggerPageProcessor.getHostAddr() + "Blogger/Search?" + paramsList.get(i) + "&page=" + page);
+                log.debug("i={}",i);
+                log.debug("开始请求url:{}Blogger/Search?{}&page={}",feiGuaDynamicParamBloggerPageProcessor.getHostAddr(),paramsList.get(i),page);
                 if (feiGuaDynamicParamBloggerPageProcessor.getFlag()) {
                     return;
                 }
@@ -107,5 +108,12 @@ public class ReceiveMessageEndpoint {
 //            System.out.println("-----------------------i=" + i);
 //        }
 //    }
+
+    @GetMapping("/log")
+    public String log() {
+        String name = "张三";
+        log.debug("hello {}.", name);
+        return "log";
+    }
 }
 
