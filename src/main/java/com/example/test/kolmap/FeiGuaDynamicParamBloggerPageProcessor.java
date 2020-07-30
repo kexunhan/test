@@ -29,6 +29,8 @@ public class FeiGuaDynamicParamBloggerPageProcessor implements PageProcessor {
 
     private int pageNo = 1;
 
+    private int currentPage=1;
+
 
 
 
@@ -60,27 +62,27 @@ public class FeiGuaDynamicParamBloggerPageProcessor implements PageProcessor {
     @Override
     public void process(Page page) {
         //如果cookies超时了，就直接退出
-        if (page.getHtml().toString().contains("登录/注册")|| page.getHtml().toString().contains("登陆超时")) {
+        if (page.getUrl().toString().startsWith(hostAddr + "Blogger/Search") && (page.getHtml().toString().contains("登录/注册")|| page.getHtml().toString().contains("登陆超时"))) {
             System.out.println("cookies 超时了");
             // cookie失效
             DingTalkUtils.robotSendMessage();
             Document document = new Document();
-            document.append("pageNo", pageNo);
-            document.append("param", currentParam);
+            document.append("currentPage", currentPage);
+            document.append("currentParam", currentParam);
             Constant.flag= true;
             mongodbUtils.insertOne("PAGE", document);
-            throw new RuntimeException("cookies 超时了,重新登陆 pageNo=" + pageNo);
+            throw new RuntimeException("cookies 超时了,重新登陆 currentPage=" + currentPage);
         }
         Jerry doc = jerry(page.getHtml().toString());
 
         if (page.getUrl().toString().startsWith(hostAddr + "Blogger/Search")) {
             String url = page.getUrl().toString();
-            pageNo = Integer.valueOf(url.substring(url.lastIndexOf("=") + 1)) + 1;
-            System.out.println("----------pageNo="+pageNo);
-            System.out.println("++++++++++"+hostAddr + "Blogger/Search?" + currentParam + "&page=" + pageNo);
+            currentPage = Integer.valueOf(url.substring(url.lastIndexOf("=") + 1)) + 1;
+            System.out.println("----------currentPage="+currentPage);
+            System.out.println("++++++++++"+hostAddr + "Blogger/Search?" + currentParam + "&page=" + currentPage);
             List<String> links = page.getHtml().links().regex(hostAddr + "Blogger/Search\\?" + currentParam + "&page=\\d+#/Blogger/Detail.*").all();
             if (CollectionUtil.isNotEmpty(links)){
-                page.addTargetRequest(hostAddr + "Blogger/Search?" + currentParam + "&page=" + pageNo);
+                page.addTargetRequest(hostAddr + "Blogger/Search?" + currentParam + "&page=" + currentPage);
             }
 
         }

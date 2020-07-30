@@ -357,8 +357,8 @@ public class ReceiveMessageEndpoint {
 
             Document page1 = mongoTemplate.getCollection("PAGE").find().first();
 
-            int page = (int) page1.get("pageNo");
-            String currentParam = (String) page1.get("param");
+            int page = (int) page1.get("currentPage");
+            String currentParam = (String) page1.get("currentParam");
             log.debug("page={} \t param={}", page, currentParam);
             log.debug("接收的cookie: {}", feiGuaDynamicParamBloggerPageProcessor.getSite().getCookies());
             mongoTemplate.dropCollection("PAGE");
