@@ -14,5 +14,5 @@ public class Constant {
     public static final String APP_SECRET = "BGm6yJwN0rTRLtBMCZS2MDgGZSf8-GSI95dH4ptEFiDaG4idC3BvuQlThMpjXsp1";
 
 
-    public static  String cookie = null;
+    public static  Boolean flag = false;
 }
