@@ -391,29 +391,29 @@ public class ReceiveMessageEndpoint {
     }
 
 
-    @GetMapping("/receiveRobotMassage")
-    public void receiveRobotMassage() {
-        String cookie = "";
-        Site site = Site.me().setRetryTimes(3).setSleepTime(8000).setTimeOut(10000).addCookie("PHPSESSID", cookie);
-        FeiGuaDynamicParamBloggerPageProcessor feiGuaDynamicParamBloggerPageProcessor = new FeiGuaDynamicParamBloggerPageProcessor(parseDataUtil,mongodbUtils);
-        feiGuaDynamicParamBloggerPageProcessor.setSite(site);
-
-
-        int page = 1;
-        String currentParam = "isWithCommerceEntry=1&multiTag=汽车&fans=10-50";
-        log.debug("page={} \t param={}", page, currentParam);
-        log.debug("接收的cookie: {}", feiGuaDynamicParamBloggerPageProcessor.getSite().getCookies());
-        int index = paramsList.indexOf(currentParam);
-        for (int i = index; i < paramsList.size(); i++) {
-            log.debug("paramsList.size={},\t 当前为index={}", paramsList.size(), i);
-            log.debug("开始请求url:{}Blogger/Search?{}&page={}", feiGuaDynamicParamBloggerPageProcessor.getHostAddr(), paramsList.get(i), page);
-            feiGuaDynamicParamBloggerPageProcessor.setCurrentParam(paramsList.get((i)));
-            Spider.create(feiGuaDynamicParamBloggerPageProcessor).addUrl(feiGuaDynamicParamBloggerPageProcessor.getHostAddr() + "Blogger/Search?" + paramsList.get(i) + "&page=" + page).thread(1).run();
-            if (Constant.flag) {
-                return;
-            }
-        }
-    }
+//    @GetMapping("/receiveRobotMassage")
+//    public void receiveRobotMassage() {
+//        String cookie = "";
+//        Site site = Site.me().setRetryTimes(3).setSleepTime(8000).setTimeOut(10000).addCookie("PHPSESSID", cookie);
+//        FeiGuaDynamicParamBloggerPageProcessor feiGuaDynamicParamBloggerPageProcessor = new FeiGuaDynamicParamBloggerPageProcessor(parseDataUtil,mongodbUtils);
+//        feiGuaDynamicParamBloggerPageProcessor.setSite(site);
+//
+//
+//        int page = 1;
+//        String currentParam = "isWithCommerceEntry=1&multiTag=汽车&fans=10-50";
+//        log.debug("page={} \t param={}", page, currentParam);
+//        log.debug("接收的cookie: {}", feiGuaDynamicParamBloggerPageProcessor.getSite().getCookies());
+//        int index = paramsList.indexOf(currentParam);
+//        for (int i = index; i < paramsList.size(); i++) {
+//            log.debug("paramsList.size={},\t 当前为index={}", paramsList.size(), i);
+//            log.debug("开始请求url:{}Blogger/Search?{}&page={}", feiGuaDynamicParamBloggerPageProcessor.getHostAddr(), paramsList.get(i), page);
+//            feiGuaDynamicParamBloggerPageProcessor.setCurrentParam(paramsList.get((i)));
+//            Spider.create(feiGuaDynamicParamBloggerPageProcessor).addUrl(feiGuaDynamicParamBloggerPageProcessor.getHostAddr() + "Blogger/Search?" + paramsList.get(i) + "&page=" + page).thread(1).run();
+//            if (Constant.flag) {
+//                return;
+//            }
+//        }
+//    }
 
 
 
