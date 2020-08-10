@@ -372,6 +372,7 @@ public class ReceiveMessageEndpoint {
                 if (Constant.flag) {
                     return;
                 }
+                page=1;
             }
 
 

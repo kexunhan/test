@@ -62,7 +62,7 @@ public class FeiGuaDynamicParamBloggerPageProcessor implements PageProcessor {
     @Override
     public void process(Page page) {
         //如果cookies超时了，就直接退出
-        if (page.getUrl().toString().startsWith(hostAddr + "Blogger/Search") && (page.getHtml().toString().contains("登录/注册")|| page.getHtml().toString().contains("登陆超时"))) {
+        if (page.getHtml().toString().contains("登录/注册")|| page.getHtml().toString().contains("登陆超时")) {
             System.out.println("cookies 超时了");
             // cookie失效
             DingTalkUtils.robotSendMessage();
