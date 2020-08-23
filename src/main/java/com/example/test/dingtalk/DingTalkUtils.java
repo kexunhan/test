@@ -56,7 +56,7 @@ public class DingTalkUtils {
      *
      */
     public static   void robotSendMessage(){
-        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/robot/send?access_token=89ffda16716f6f250ddbc917a4dba78bf3d87d2a621439d12f4cb790e55c0695");
+        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/robot/send?access_token=ab5143f5c69fe57c2178d88679dcadd1661c1a29ee18f2adb29ede5e343c4d35");
         OapiRobotSendRequest request = new OapiRobotSendRequest();
         request.setMsgtype("text");
         OapiRobotSendRequest.Text text = new OapiRobotSendRequest.Text();

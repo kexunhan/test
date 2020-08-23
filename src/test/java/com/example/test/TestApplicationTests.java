@@ -28,7 +28,7 @@ class TestApplicationTests {
 
     @Test
     void haha(){
-        // 10
+        // 10471
         long l = mongoTemplate.getCollection("BLOGGER-DETAILS").countDocuments();
         System.out.println(l);
     }
